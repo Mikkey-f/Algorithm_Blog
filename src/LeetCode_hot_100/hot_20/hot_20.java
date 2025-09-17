@@ -2,92 +2,43 @@ package LeetCode_hot_100.hot_20;
 
 /**
  * @Author: Mikkeyf
- * @CreateTime: 2025/9/16 14:43
+ * @CreateTime: 2025/9/17 17:17
  */
 public class hot_20 {
     public static void main(String[] args) {
-        int[][] matrix = {{0,1,2,0},{3,4,5,2},{1,3,1,5}};
-        setZeroes(matrix);
+        int[][] matrix = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+        rotate(matrix);
     }
     /**
-     * 矩阵置零
-     * @param matrix m * n 的矩阵, 一个元素为0，则将其所在行和列都设置为0
-     * 想到了O(n + m)的方法，但是O(1)没有想到
+     * 旋转图像
+     * @param matrix n * n矩阵，顺时针旋转90度
      */
-    public static void setZeroes(int[][] matrix) {
-        // 空间复杂度O(n + m)
-//        int[] row = new int[matrix.length];
-//        int[] col = new int[matrix[0].length];
-//        for (int i = 0; i < matrix.length; i++) {
-//            for (int j = 0; j < matrix[0].length; j++) {
-//                if (matrix[i][j] == 0) {
-//                    row[i] = 1; col[j] = 1;
-//                }
-//            }
-//        }
-//        for (int i = 0; i < row.length; i++) {
-//            if (row[i] == 1) {
-//                for (int j = 0; j < col.length; j++) {
-//                    matrix[i][j] = 0;
-//                }
-//            }
-//        }
-//        for (int i = 0; i < col.length; i++) {
-//            if (col[i] == 1) {
-//                for (int j = 0; j < row.length; j++) {
-//                    matrix[j][i] = 0;
-//                }
-//            }
-//        }
-        // 空间复杂度O(1)
-        boolean isFirstRow = false;
-        boolean isFirstCol = false;
-        for (int i = 0; i < matrix.length; i++) {
-            if (matrix[i][0] == 0) {
-                isFirstCol = true;
-                break;
-            }
+    public static void rotate(int[][] matrix) {
+        int m = matrix.length; // 3
+        int len = 0;
+        if (m % 2 == 1) {
+            len = m / 2 + 1;
+        } else {
+            len = m / 2;
         }
-        for (int i = 0; i < matrix[0].length; i++) {
-            if (matrix[0][i] == 0) {
-                isFirstRow = true;
-                break;
-            }
-        }
-        for (int i = 1; i < matrix.length; i++) {
-            for (int j = 1; j < matrix[0].length; j++) {
-                if (matrix[i][j] == 0) {
-                    matrix[0][j] = matrix[i][0] = 0;
-                }
-            }
-        }
-        for (int i = 1; i < matrix.length; i++) {
-            if (matrix[i][0] == 0) {
-                for (int j = 1; j < matrix[0].length; j++) {
-                    matrix[i][j] = 0;
-                }
-            }
-        }
+        for (int i = 0; i < len; i++) { // 往内部走了(i, i)
+            for (int j = 0; j < m - 1 - i * 2; j++) {
+                int tx = m - i * 2 - 1;
+                int del_x_up = j; int del_y_up = tx - del_x_up;//+1 +2
+                int del_x_right = del_y_up; int del_y_right = -del_x_up;
+                int del_x_down = -del_x_up; int del_y_down = -del_y_up;
+                int del_x_left = -del_y_up; int del_y_left = del_x_up;
+                int x_up = i; int y_up = j + i;
+                int x_right = x_up + del_x_up; int y_right = y_up + del_y_up;
+                int x_down = x_right + del_x_right; int y_down = y_right + del_y_right;
+                int x_left = x_down + del_x_down; int y_left = y_down + del_y_down;
 
-        for (int i = 1; i < matrix[0].length; i++) {
-            if (matrix[0][i] == 0) {
-                for (int j = 1; j < matrix.length; j++) {
-                    matrix[j][i] = 0;
-                }
+                int temp_up = matrix[x_up][y_up];
+                matrix[x_up][y_up] = matrix[x_left][y_left];
+                matrix[x_left][y_left] = matrix[x_down][y_down];
+                matrix[x_down][y_down] = matrix[x_right][y_right];
+                matrix[x_right][y_right] = temp_up;
             }
         }
-
-        if (isFirstRow) {
-            for (int i = 0; i < matrix[0].length; i++) {
-                matrix[0][i] = 0;
-            }
-        }
-
-        if (isFirstCol) {
-            for (int i = 0; i < matrix.length; i++) {
-                matrix[i][0] = 0;
-            }
-        }
-        int t = 0;
     }
 }
